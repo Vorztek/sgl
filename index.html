@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Répertoire des Filiales</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #253372;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 10%;
+            position: relative;
+        }
+        #titleContainer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+        #titleContainer h1 {
+            margin: 0;
+        }
+        #searchContainer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin-top: 10px;
+        }
+        #searchInput {
+            border-radius: 15px;
+            padding: 10px 20px;
+            border: 1px solid #ccc;
+            outline: none;
+            width: 50%;
+            box-sizing: border-box;
+        }
+        #menuIconContainer {
+            position: absolute;
+            top: 40px;
+            right: 5%;
+            display: flex;
+            align-items: center;
+        }
+        #menuIcon {
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+        }
+        .submenu {
+            display: none;
+            position: absolute;
+            right: 10%;
+            top: 70px;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 10px;
+            z-index: 1000;
+        }
+        .submenu a {
+            display: block;
+            text-decoration: none;
+            color: #333;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .submenu img {
+            width: 50px;
+            height: 50px;
+            display: block;
+            margin: 0 auto;
+        }
+        main {
+            padding: 20px;
+        }
+        ul#filialeList {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        ul#filialeList li {
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 10px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 200px;
+            text-align: center;
+            flex: 1 1 calc(25% - 40px);
+            box-sizing: border-box;
+        }
+        ul#filialeList li:hover {
+            background-color: #e0e0e0;
+        }
+        ul#filialeList li a {
+            text-decoration: none;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        ul#filialeList li a img {
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+        ul#filialeList li a span {
+            font-size: 1.5em;
+            font-weight: medium;
+            color: #333;
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+        }
+        @media (max-width: 768px) {
+            #searchInput {
+                width: 70%;
+            }
+            #menuIconContainer {
+                right: 5%;
+            }
+            .submenu {
+                right: 5%;
+            }
+            ul#filialeList li {
+                flex: 1 1 calc(50% - 40px);
+            }
+        }
+        @media (max-width: 480px) {
+            #searchInput {
+                width: 90%;
+            }
+            ul#filialeList li {
+                flex: 1 1 100%;
+            }
+        }
+    </style>
+    <link rel="icon" href="images/Group 2.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div id="titleContainer">
+            <h1>Répertoire des Filiales</h1>
+        </div>
+        <div id="searchContainer">
+            <input type="text" id="searchInput" placeholder="Rechercher une filiale...">
+        </div>
+        <div id="menuIconContainer">
+            <img src="images/icone menu.png" id="menuIcon" alt="Menu Icon">
+        </div>
+        <div class="submenu" id="submenu">
+            <a href="https://retarus.inovie.infra/retarus.php">
+                <img src="images/Logo_retarus.png" alt="Retarus Logo">
+                Retarus
+            </a>
+            <a href="https://itop.inovie.fr/">
+                <img src="images/itoop.png" alt="iTop Logo">
+                iTop
+            </a>
+        </div>
+    </header>
+    <main>
+        <ul id="filialeList"></ul>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const filiales = [
+                { name: 'Labosud', url: 'https://s117.hexalis.net:2000/', imageUrl: 'images/Group 2.png' },
+                { name: 'Biomédilab', url: 'https://3027122.hexalis.net:2000/', imageUrl: 'images/Group 2.png' },
+                { name: 'Labosud Provence', url: 'https://3040513.hexalis.net:2000/', imageUrl: 'images/Group 2.png' },
+                { name: 'Réunilab', url: 'https://103715.hexalis.net:2000/', imageUrl: 'images/Group 2.png' },
+            ];
+
+            const filialeList = document.getElementById('filialeList');
+            const searchInput = document.getElementById('searchInput');
+            const menuIcon = document.getElementById('menuIcon');
+            const submenu = document.getElementById('submenu');
+
+            function displayFiliales(filiales) {
+                filialeList.innerHTML = '';
+                filiales.forEach(filiale => {
+                    const li = document.createElement('li');
+                    const a = document.createElement('a');
+                    const img = document.createElement('img');
+                    const span = document.createElement('span');
+
+                    a.href = filiale.url;
+                    img.src = filiale.imageUrl;
+                    img.alt = filiale.name;
+                    span.textContent = filiale.name;
+
+                    a.appendChild(img);
+                    a.appendChild(span);
+                    li.appendChild(a);
+                    filialeList.appendChild(li);
+                });
+            }
+
+            searchInput.addEventListener('input', function () {
+                const searchTerm = searchInput.value.toLowerCase();
+                const filteredFiliales = filiales.filter(filiale =>
+                    filiale.name.toLowerCase().includes(searchTerm)
+                );
+                displayFiliales(filteredFiliales);
+            });
+
+            menuIcon.addEventListener('click', function () {
+                submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
+            });
+
+            displayFiliales(filiales);
+        });
+    </script>
+</body>
+</html>
